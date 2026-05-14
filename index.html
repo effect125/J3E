@@ -1,10 +1,7 @@
-# GMDSS Test System React Code
+import React, { useEffect, useMemo, useState } from 'react';
 
-```jsx
 export default function App() {
-  import React, { useEffect, useMemo, useState } from 'react';
-
-  const TOTAL_EXAM_QUESTIONS = 45;
+  const TOTAL_EXAM_QUESTIONS = 17;
 
   const QUESTIONS = [
     {
@@ -45,19 +42,22 @@ export default function App() {
     },
     {
       id: 118,
-      question: 'The Radio Telex mode to be used when broadcasting a Distress Message, on 2174.5kHz, is:',
+      question:
+        'The Radio Telex mode to be used when broadcasting a Distress Message, on 2174.5kHz, is:',
       answers: ['J3E', 'ARQ', 'H3E', 'FEC'],
       correct: 3,
     },
     {
       id: 122,
-      question: 'The correct mode of emission for a RT distress message on 2182 kHz is',
+      question:
+        'The correct mode of emission for a RT distress message on 2182 kHz is',
       answers: ['R3E', 'F1B', 'H3E', 'J3E'],
       correct: 2,
     },
     {
       id: 123,
-      question: 'The correct class of emission for a MF Radiotelex transmission is',
+      question:
+        'The correct class of emission for a MF Radiotelex transmission is',
       answers: ['F1B', 'J3E', 'G3E', 'F3E'],
       correct: 0,
     },
@@ -69,43 +69,50 @@ export default function App() {
     },
     {
       id: 125,
-      question: 'The Radio Telex mode to be used for one-to-one communications, with automatic error correction, is:',
+      question:
+        'The Radio Telex mode to be used for one-to-one communications, with automatic error correction, is:',
       answers: ['H3E', 'ARQ', 'J3E', 'FEC'],
       correct: 1,
     },
     {
       id: 197,
-      question: 'The abbreviation of telephony mode of radiation using phase modulation is',
+      question:
+        'The abbreviation of telephony mode of radiation using phase modulation is',
       answers: ['F1B', 'F3E', 'G3E', 'P3E'],
       correct: 2,
     },
     {
       id: 198,
-      question: 'The abbreviation of telephony mode of radiation using amplitude modulation, SSB, suppressed carrier is',
+      question:
+        'The abbreviation of telephony mode of radiation using amplitude modulation, SSB, suppressed carrier is',
       answers: ['A3E', 'J3E', 'H3E', 'J2B'],
       correct: 1,
     },
     {
       id: 199,
-      question: 'The abbreviation of telephony mode of radiation using amplitude modulation, SSB, full carrier is',
+      question:
+        'The abbreviation of telephony mode of radiation using amplitude modulation, SSB, full carrier is',
       answers: ['A3E', 'J3E', 'H3E', 'J2B'],
       correct: 2,
     },
     {
       id: 202,
-      question: 'Which type of transmission is used for transmitting ARQ and FEC from Ship Radio Station?',
+      question:
+        'Which type of transmission is used for transmitting ARQ and FEC from Ship Radio Station?',
       answers: ['G3E', 'H3E', 'J2B', 'SSB GMDSS'],
       correct: 2,
     },
     {
       id: 203,
-      question: 'Which type of transmission is used for transmitting USB MF/HF call?',
+      question:
+        'Which type of transmission is used for transmitting USB MF/HF call?',
       answers: ['F3E', 'J3E', 'G2B', 'VHF Radiotelephony'],
       correct: 1,
     },
     {
       id: 376,
-      question: 'VHF-DSC transmissions are encoded and transmitted in what emission mode?',
+      question:
+        'VHF-DSC transmissions are encoded and transmitted in what emission mode?',
       answers: ['H3E', 'F1B/J2B', 'A3E', 'None of these'],
       correct: 1,
     },
@@ -202,10 +209,14 @@ export default function App() {
     if (isCorrect) {
       setCorrectAnswers((prev) => prev + 1);
 
-      setMistakes((prev) => prev.filter((q) => q.id !== question.id));
+      setMistakes((prev) =>
+        prev.filter((q) => q.id !== question.id)
+      );
     } else {
       setMistakes((prev) => {
-        const alreadyExists = prev.find((q) => q.id === question.id);
+        const alreadyExists = prev.find(
+          (q) => q.id === question.id
+        );
 
         if (alreadyExists) return prev;
 
@@ -228,7 +239,10 @@ export default function App() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-5">
         <div className="bg-zinc-900 p-10 rounded-2xl border border-zinc-700 text-center max-w-xl w-full">
-          <h1 className="text-4xl font-bold mb-4">Работа над ошибками</h1>
+          <h1 className="text-4xl font-bold mb-4">
+            Работа над ошибками
+          </h1>
+
           <p className="text-zinc-300 text-lg mb-6">
             У тебя нет ошибок. Все вопросы решены правильно.
           </p>
@@ -248,14 +262,22 @@ export default function App() {
     return (
       <div className="min-h-screen bg-black text-white flex items-center justify-center p-5">
         <div className="bg-zinc-900 p-10 rounded-2xl border border-zinc-700 max-w-2xl w-full text-center">
-          <h1 className="text-5xl font-bold mb-6">Тест завершён</h1>
+          <h1 className="text-5xl font-bold mb-6">
+            Тест завершён
+          </h1>
 
           <div className="text-2xl mb-4">
-            Правильных ответов: <span className="text-green-400">{correctAnswers}</span>
+            Правильных ответов:{' '}
+            <span className="text-green-400">
+              {correctAnswers}
+            </span>
           </div>
 
           <div className="text-2xl mb-8">
-            Ошибок: <span className="text-red-400">{questionsToShow.length - correctAnswers}</span>
+            Ошибок:{' '}
+            <span className="text-red-400">
+              {questionsToShow.length - correctAnswers}
+            </span>
           </div>
 
           <div className="flex flex-wrap gap-4 justify-center">
@@ -263,7 +285,7 @@ export default function App() {
               onClick={startExam}
               className="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold"
             >
-              Новый тест (45 вопросов)
+              Новый тест
             </button>
 
             <button
@@ -291,9 +313,13 @@ export default function App() {
         <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 mb-6">
           <div className="flex flex-wrap gap-3 justify-between items-center">
             <div>
-              <h1 className="text-3xl font-bold">GMDSS Test System</h1>
+              <h1 className="text-3xl font-bold">
+                GMDSS Test System
+              </h1>
+
               <p className="text-zinc-400 mt-1">
-                Вопрос {currentQuestion + 1} из {questionsToShow.length}
+                Вопрос {currentQuestion + 1} из{' '}
+                {questionsToShow.length}
               </p>
             </div>
 
@@ -302,7 +328,7 @@ export default function App() {
                 onClick={startExam}
                 className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl font-bold"
               >
-                Тест 45
+                Тест
               </button>
 
               <button
@@ -325,13 +351,12 @@ export default function App() {
         <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-8">
           <div className="mb-8">
             <div className="text-sm text-zinc-500 mb-2">
-              Режим: {
-                mode === 'exam'
-                  ? 'Тест 45 вопросов'
-                  : mode === 'all'
-                  ? 'Все вопросы'
-                  : 'Работа над ошибками'
-              }
+              Режим:{' '}
+              {mode === 'exam'
+                ? 'Тест'
+                : mode === 'all'
+                ? 'Все вопросы'
+                : 'Работа над ошибками'}
             </div>
 
             <h2 className="text-3xl font-bold leading-relaxed">
@@ -344,15 +369,18 @@ export default function App() {
               const isCorrect = index === question.correct;
               const isSelected = index === selectedAnswer;
 
-              let classes = 'border border-zinc-700 hover:border-zinc-500 bg-zinc-800';
+              let classes =
+                'border border-zinc-700 hover:border-zinc-500 bg-zinc-800';
 
               if (selectedAnswer !== null) {
                 if (isCorrect) {
-                  classes = 'border-green-500 bg-green-500/20';
+                  classes =
+                    'border-green-500 bg-green-500/20';
                 }
 
                 if (isSelected && !isCorrect) {
-                  classes = 'border-red-500 bg-red-500/20';
+                  classes =
+                    'border-red-500 bg-red-500/20';
                 }
               }
 
@@ -367,7 +395,9 @@ export default function App() {
                       {String.fromCharCode(65 + index)}
                     </div>
 
-                    <div className="text-lg">{answer}</div>
+                    <div className="text-lg">
+                      {answer}
+                    </div>
                   </div>
                 </button>
               );
@@ -392,4 +422,3 @@ export default function App() {
     </div>
   );
 }
-```
