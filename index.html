@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GMDSS Test System</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app"></div>
+
+<script>
+const QUESTIONS = [
+  {
+    id: 2,
+    question: 'What is the emission designation for VHF-FM?',
+    answers: ['F3C', 'J2B', 'F3E', 'G2B'],
+    correct: 2,
+  },
+  {
+    id: 13,
+    question: 'The correct mode of emission for HF radiotelephony SSB transmission is',
+    answers: ['J3E', 'H3E', 'F1B', 'G3E'],
+    correct: 0,
+  },
+  {
+    id: 64,
+    question: 'What is the emission designation for MF-HF voice signals?',
+    answers: ['F1B', 'J3E', 'J2B', 'F3E'],
+    correct: 1,
+  },
+  {
+    id: 68,
+    question: 'Which emission mode occupies the most bandwidth?',
+    answers: ['J2B', 'J3E', 'F1B', 'F3E'],
+    correct: 3,
+  },
+  {
+    id: 69,
+    question: 'Which mode occupies the least bandwidth?',
+    answers: ['H3E', 'J2B', 'G3E', 'F3E'],
+    correct: 1,
+  },
+  {
+    id: 70,
+    question: 'What is the emission designation for MF-HF voice signals?',
+    answers: ['F1B', 'J3E', 'J2B', 'F3E'],
+    correct: 1,
+  },
+  {
+    id: 118,
+    question: 'The Radio Telex mode to be used when broadcasting a Distress Message, on 2174.5kHz, is:',
+    answers: ['J3E', 'ARQ', 'H3E', 'FEC'],
+    correct: 3,
+  },
+  {
+    id: 122,
+    question: 'The correct mode of emission for a RT distress message on 2182 kHz is',
+    answers: ['R3E', 'F1B', 'H3E', 'J3E'],
+    correct: 2,
+  },
+  {
+    id: 123,
+    question: 'The correct class of emission for a MF Radiotelex transmission is',
+    answers: ['F1B', 'J3E', 'G3E', 'F3E'],
+    correct: 0,
+  },
+  {
+    id: 124,
+    question: 'The mode of emission used for voice on MF and HF is',
+    answers: ['F3E', 'A3E', 'J3E', 'F1B'],
+    correct: 2,
+  },
+  {
+    id: 125,
+    question: 'The Radio Telex mode to be used for one-to-one communications, with automatic error correction, is:',
+    answers: ['H3E', 'ARQ', 'J3E', 'FEC'],
+    correct: 1,
+  },
+  {
+    id: 197,
+    question: 'The abbreviation of telephony mode of radiation using phase modulation is',
+    answers: ['F1B', 'F3E', 'G3E', 'P3E'],
+    correct: 2,
+  },
+  {
+    id: 198,
+    question: 'The abbreviation of telephony mode of radiation using amplitude modulation, SSB, suppressed carrier is',
+    answers: ['A3E', 'J3E', 'H3E', 'J2B'],
+    correct: 1,
+  },
+  {
+    id: 199,
+    question: 'The abbreviation of telephony mode of radiation using amplitude modulation, SSB, full carrier is',
+    answers: ['A3E', 'J3E', 'H3E', 'J2B'],
+    correct: 2,
+  },
+  {
+    id: 202,
+    question: 'Which type of transmission is used for transmitting ARQ and FEC from Ship Radio Station?',
+    answers: ['G3E', 'H3E', 'J2B', 'SSB GMDSS'],
+    correct: 2,
+  },
+  {
+    id: 203,
+    question: 'Which type of transmission is used for transmitting USB MF/HF call?',
+    answers: ['F3E', 'J3E', 'G2B', 'VHF Radiotelephony'],
+    correct: 1,
+  },
+  {
+    id: 376,
+    question: 'VHF-DSC transmissions are encoded and transmitted in what emission mode?',
+    answers: ['H3E', 'F1B/J2B', 'A3E', 'None of these'],
+    correct: 1,
+  },
+];
+
+let currentQuestion = 0;
+let correctAnswers = 0;
+let selectedAnswer = null;
+let mistakes = JSON.parse(localStorage.getItem('mistakes') || '[]');
+
+function saveMistakes() {
+  localStorage.setItem('mistakes', JSON.stringify(mistakes));
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQuestion];
+
+  document.getElementById('app').innerHTML = `
+    <div class="min-h-screen text-white p-5">
+      <div class="max-w-4xl mx-auto">
+
+        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl p-6 mb-6">
+          <div class="flex justify-between items-center flex-wrap gap-3">
+
+            <div>
+              <h1 class="text-3xl font-bold">GMDSS Test System</h1>
+              <p class="text-zinc-400 mt-1">
+                Вопрос ${currentQuestion + 1} из ${QUESTIONS.length}
+              </p>
+            </div>
+
+            <button
+              onclick="resetTest()"
+              class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-xl font-bold"
+            >
+              Сбросить тест
+            </button>
+
+          </div>
+        </div>
+
+        <div class="bg-zinc-900 border border-zinc-700 rounded-2xl p-8">
+
+          <h2 class="text-3xl font-bold leading-relaxed mb-8">
+            ${q.question}
+          </h2>
+
+          <div class="grid gap-4">
+
+            ${q.answers.map((answer, index) => `
+              <button
+                onclick="selectAnswer(${index})"
+                id="answer-${index}"
+                class="text-left p-5 rounded-2xl border border-zinc-700 hover:border-zinc-500 bg-zinc-800 transition-all duration-200"
+              >
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-full bg-black/30 flex items-center justify-center font-bold">
+                    ${String.fromCharCode(65 + index)}
+                  </div>
+
+                  <div class="text-lg">
+                    ${answer}
+                  </div>
+                </div>
+              </button>
+            `).join('')}
+
+          </div>
+
+          <div class="mt-8 flex justify-between items-center">
+
+            <div class="text-zinc-400">
+              Правильных ответов: ${correctAnswers}
+            </div>
+
+            <button
+              onclick="nextQuestion()"
+              id="nextBtn"
+              disabled
+              class="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed px-6 py-3 rounded-xl font-bold text-lg"
+            >
+              Следующий вопрос
+            </button>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function selectAnswer(index) {
+  if (selectedAnswer !== null) return;
+
+  selectedAnswer = index;
+
+  const q = QUESTIONS[currentQuestion];
+
+  q.answers.forEach((_, i) => {
+    const btn = document.getElementById(`answer-${i}`);
+
+    if (i === q.correct) {
+      btn.classList.add('border-green-500', 'bg-green-500/20');
+    }
+
+    if (i === index && i !== q.correct) {
+      btn.classList.add('border-red-500', 'bg-red-500/20');
+    }
+  });
+
+  if (index === q.correct) {
+    correctAnswers++;
+  } else {
+    if (!mistakes.find(m => m.id === q.id)) {
+      mistakes.push(q);
+      saveMistakes();
+    }
+  }
+
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQuestion() {
+  currentQuestion++;
+  selectedAnswer = null;
+
+  if (currentQuestion >= QUESTIONS.length) {
+    finishTest();
+    return;
+  }
+
+  renderQuestion();
+}
+
+function finishTest() {
+  document.getElementById('app').innerHTML = `
+    <div class="min-h-screen bg-black text-white flex items-center justify-center p-5">
+
+      <div class="bg-zinc-900 p-10 rounded-2xl border border-zinc-700 max-w-2xl w-full text-center">
+
+        <h1 class="text-5xl font-bold mb-6">
+          Тест завершён
+        </h1>
+
+        <div class="text-2xl mb-4">
+          Правильных ответов:
+          <span class="text-green-400">${correctAnswers}</span>
+        </div>
+
+        <div class="text-2xl mb-8">
+          Ошибок:
+          <span class="text-red-400">${QUESTIONS.length - correctAnswers}</span>
+        </div>
+
+        <button
+          onclick="resetTest()"
+          class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold"
+        >
+          Начать заново
+        </button>
+
+      </div>
+    </div>
+  `;
+}
+
+function resetTest() {
+  currentQuestion = 0;
+  correctAnswers = 0;
+  selectedAnswer = null;
+
+  renderQuestion();
+}
+
+renderQuestion();
+</script>
+
+</body>
+</html>
